@@ -5,11 +5,11 @@ import static java.lang.Character.toLowerCase;
 public class ROT13  {
     private int shift;
 
-    ROT13(Character cs, Character cf) {
+    public ROT13(Character cs, Character cf) {
         this.shift = cf - cs;
     }
 
-    ROT13() {
+    public ROT13() {
         this.shift = 13;
     }
 
