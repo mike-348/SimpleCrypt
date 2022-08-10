@@ -1,16 +1,14 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class Sonnet18 {
-    private ROT13 rot13;
+    protected ROT13 rot13;
     public Sonnet18() {
         this.rot13 = new ROT13();
     }
 
-    public String loadFile(String fileName) throws IOException {
-        try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+    public String loadFile(String fileName) {
+        String result = "";
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -19,14 +17,37 @@ public class Sonnet18 {
                 sb.append(System.lineSeparator());
                 line = br.readLine();
             }
-            String everything = sb.toString();
-            return everything;
+            result = sb.toString();
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String encryptFile(String fileName) {
+        String original = loadFile(fileName);
+        return rot13.crypt(original);
+    }
+
+    public void encryptThenWriteToFile(String fileToEncrypt, String fileToWriteTo) {
+        try {
+            String encryptedText = encryptFile(fileToEncrypt);
+            FileWriter writer = new FileWriter(fileToWriteTo);
+            writer.write(encryptedText);
+            writer.close();
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public static void main(String[] args) throws IOException {
         Sonnet18 s18 = new Sonnet18();
-        String s = s18.loadFile("sonnet18.txt");
-        System.out.println(s);
+        String file1 = "sonnet18.txt";
+        String file2 = "output.txt";
+        s18.encryptThenWriteToFile(file1, file2);
     }
 }
